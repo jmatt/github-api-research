@@ -59,3 +59,7 @@ target/
 # Emacs
 #*#
 *~
+
+# ignore the test RSA key.
+gar/test_rsa.key
+gar/test_rsa.key.pub
