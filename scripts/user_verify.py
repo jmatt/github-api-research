@@ -1,7 +1,11 @@
 #!/usr/bin/env python
 import argparse
 import getpass
+
 import libsaas
+
+from gar import auth
+
 
 class PasswordPromptAction(argparse.Action):
     def __init__(self,
@@ -37,7 +41,9 @@ def main():
                         help='Github user password.')
     parser.add_argument('-r', '--repo', required=True,
                         help='Repository to verify.')
-    
+    args = parser.parse_args()
+    print(auth.verify_user(args.user, args.password))
+
 
 if __name__ == '__main__':
     main()
