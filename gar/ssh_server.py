@@ -29,23 +29,24 @@ import traceback
 import paramiko
 
 
-# setup logging
+# setup configuration
 paramiko.util.log_to_file('demo_server.log')
+key_filename = os.path.join(os.path.basename(__file__),
+                            '../config/test_rsa.key')
+host_key = paramiko.RSAKey(filename=key_filename)
 
-host_key = paramiko.RSAKey(filename='test_rsa.key')
-#host_key = paramiko.DSSKey(filename='test_dss.key')
 
 print('Read key: ' + str(hexlify(host_key.get_fingerprint())))
 
 
 class Server (paramiko.ServerInterface):
-    good_pub_key_str = bytes(open("/Users/jmatt/.ssh/id_rsa.pub", 'r').read().split()[1].encode())
+    good_pub_key_str = bytes(
+        open("/Users/jmatt/.ssh/id_rsa.pub", 'r').read().split()[1].encode())
     good_pub_key = paramiko.RSAKey(
         data=base64.decodebytes(good_pub_key_str))
 
     def __init__(self):
         self.event = threading.Event()
-        
 
     def check_channel_request(self, kind, chanid):
         if kind == 'session':
@@ -56,10 +57,11 @@ class Server (paramiko.ServerInterface):
         if (username == 'jmatt') and (password == 'jmatt'):
             return paramiko.AUTH_SUCCESSFUL
         return paramiko.AUTH_FAILED
-    
+
     def check_auth_publickey(self, username, key):
-        print('Auth attempt with user: %s and key: %s' % (username,
-                                                          str(hexlify(key.get_fingerprint()))))
+        print('Auth attempt with user: %s and key: %s' % (
+            username,
+            str(hexlify(key.get_fingerprint()))))
         if (username == 'git') and (key == self.good_pub_key):
             return paramiko.AUTH_SUCCESSFUL
         return paramiko.AUTH_FAILED
@@ -71,8 +73,8 @@ class Server (paramiko.ServerInterface):
         self.event.set()
         return True
 
-    def check_channel_pty_request(self, channel, term, width, height, pixelwidth,
-                                  pixelheight, modes):
+    def check_channel_pty_request(self, channel, term, width, height,
+                                  pixelwidth, pixelheight, modes):
         return True
 
 
@@ -125,7 +127,8 @@ try:
         sys.exit(1)
 
     chan.send('\r\n\r\nWelcome to my dorky little BBS!\r\n\r\n')
-    chan.send('We are on fire all the time!  Hooray!  Candy corn for everyone!\r\n')
+    chan.send('We are on fire all the time!  Hooray!  '
+              'Candy corn for everyone!\r\n')
     chan.send('Happy birthday to Robot Dave!\r\n\r\n')
     chan.send('Username: ')
     f = chan.makefile('rU')
