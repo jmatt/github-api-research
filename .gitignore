@@ -61,5 +61,5 @@ target/
 *~
 
 # ignore the test RSA key.
-gar/test_rsa.key
-gar/test_rsa.key.pub
+config/test_rsa.key
+config/test_rsa.key.pub
