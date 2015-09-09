@@ -14,6 +14,7 @@ def verify_user(username, password):
             print(ghe.message)
     return False
 
+
 def _str_to_key(keystr):
     key_sections = keystr.split(' ')
     for section in key_sections:
